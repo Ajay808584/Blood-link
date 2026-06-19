@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blood Request</title>
+</head>
+<body>
+
+<h2>Request Blood</h2>
+
+<input type="text" id="patient" placeholder="Patient Name"><br><br>
+
+<input type="text" id="blood" placeholder="Blood Group"><br><br>
+
+<input type="number" id="units" placeholder="Units Needed"><br><br>
+
+<input type="text" id="hospital" placeholder="Hospital Name"><br><br>
+
+<input type="text" id="location" placeholder="Location"><br><br>
+
+<input type="text" id="contact" placeholder="Contact Number"><br><br>
+
+<button onclick="requestBlood()">Submit Request</button>
+
+<script>
+async function requestBlood(){
+
+    const data = {
+        patient_name: document.getElementById("patient").value,
+        blood_group: document.getElementById("blood").value,
+        units_needed: document.getElementById("units").value,
+        hospital: document.getElementById("hospital").value,
+        location: document.getElementById("location").value,
+        contact: document.getElementById("contact").value
+    };
+
+    const res = await fetch(
+        "http://localhost:5000/api/users/request-blood",
+        {
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify(data)
+        }
+    );
+
+    const result = await res.text();
+    alert(result);
+}
+</script>
+
+</body>
+</html>

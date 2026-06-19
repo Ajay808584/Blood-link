@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Donor</title>
+</head>
+<body>
+
+<h2>Find Blood Donor</h2>
+
+<input type="text" id="blood" placeholder="Enter Blood Group">
+
+<button onclick="searchDonor()">Search</button>
+
+<div id="result"></div>
+
+<script>
+
+async function searchDonor(){
+
+    const blood =
+    document.getElementById("blood").value;
+
+    const res = await fetch(
+    `http://localhost:5000/api/users/donors/${blood}`
+    );
+
+    const data = await res.json();
+
+    let output="";
+
+    data.forEach(user=>{
+
+        output += `
+        <h3>${user.name}</h3>
+        <p>${user.phone}</p>
+        <p>${user.location}</p>
+        <hr>
+        `;
+    });
+
+    document.getElementById("result").innerHTML =
+    output;
+}
+
+</script>
+
+</body>
+</html>

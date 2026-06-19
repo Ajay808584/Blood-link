@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Blood Donor Locations</title>
+
+```
+<link rel="stylesheet"
+      href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+<style>
+    body{
+        padding:20px;
+    }
+
+    #map{
+        height:600px;
+        width:100%;
+    }
+
+    input{
+        padding:8px;
+        width:250px;
+    }
+
+    button{
+        padding:8px;
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+<h2>📍 Blood Donor Locations</h2>
+
+<input
+ type="text"
+ id="donorName"
+ placeholder="Enter Donor Name">
+
+<button onclick="findDonor()">
+    Find Donor
+</button>
+
+<br><br>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+
+const map = L.map('map').setView(
+    [17.3850, 78.4867],
+    6
+);
+
+L.tileLayer(
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+        attribution: '© OpenStreetMap'
+    }
+).addTo(map);
+
+let donorMarkers = [];
+
+async function loadDonors(){
+
+    try{
+
+        const res = await fetch(
+            "http://localhost:5000/api/users/donor-locations"
+        );
+
+        const donors = await res.json();
+
+        donors.forEach(donor => {
+
+            if(donor.latitude && donor.longitude){
+
+                const marker = L.marker([
+                    parseFloat(donor.latitude),
+                    parseFloat(donor.longitude)
+                ])
+                .addTo(map)
+                .bindPopup(
+                    "<b>" + donor.name + "</b><br>" +
+                    donor.blood_group
+                );
+
+                donorMarkers.push({
+                    name: donor.name.toLowerCase(),
+                    marker: marker
+                });
+
+            }
+
+        });
+
+        const searchedDonor =
+        localStorage.getItem("searchDonor");
+
+        if(searchedDonor){
+
+            document.getElementById("donorName").value =
+            searchedDonor;
+
+            findDonor();
+
+        }
+
+    }
+    catch(error){
+
+        console.error(error);
+        alert("Failed to load donor locations");
+
+    }
+
+}
+
+function findDonor(){
+
+    const name =
+    document.getElementById("donorName")
+    .value
+    .toLowerCase()
+    .trim();
+
+    const donor = donorMarkers.find(
+        d => d.name.includes(name)
+    );
+
+    if(!donor){
+
+        alert("Donor Not Found");
+        return;
+
+    }
+
+    donor.marker.openPopup();
+
+    map.setView(
+        donor.marker.getLatLng(),
+        15
+    );
+
+}
+
+loadDonors();
+
+</script>
+
+</body>
+</html>
