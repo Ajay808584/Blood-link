@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blood Requests</title>
+</head>
+<body>
+
+<h2>All Blood Requests</h2>
+
+<button onclick="loadRequests()">Load Requests</button>
+
+<div id="result"></div>
+
+<script>
+
+async function loadRequests(){
+
+    const res = await fetch(
+        "http://localhost:5000/api/users/all-requests"
+    );
+
+    const data = await res.json();
+
+    let output = "";
+
+    data.forEach(req => {
+
+        output += `
+        <div style="border:1px solid black;padding:10px;margin:10px;">
+            <h3>${req.patient_name}</h3>
+            <p>Blood Group: ${req.blood_group}</p>
+            <p>Units: ${req.units_needed}</p>
+            <p>Hospital: ${req.hospital}</p>
+            <p>Location: ${req.location}</p>
+            <p>Contact: ${req.contact}</p>
+        </div>
+        `;
+    });
+
+    document.getElementById("result").innerHTML = output;
+}
+
+</script>
+
+</body>
+</html>

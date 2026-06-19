@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hospital Login</title>
+</head>
+<body>
+    <script>
+
+const token = localStorage.getItem("token");
+
+if(!token){
+
+    alert("Please Login First");
+
+    window.location.href = "login.html";
+
+}
+
+</script>
+
+<h2>Hospital Login</h2>
+
+<input type="email" id="email" placeholder="Email"><br><br>
+
+<input type="password" id="password" placeholder="Password"><br><br>
+
+<button onclick="loginHospital()">Login</button>
+
+<script>
+
+async function loginHospital(){
+
+    const data = {
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value
+    };
+
+    const res = await fetch(
+        "http://localhost:5000/api/users/hospital-login",
+        {
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify(data)
+        }
+    );
+
+    alert(await res.text());
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Admin Dashboard</title>
+
+```
+<link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet">
+```
+
+</head>
+
+<body class="container mt-5">
+
+```
+<script>
+
+const token = localStorage.getItem("token");
+
+if (!token) {
+
+    alert("Please Login First");
+    window.location.href = "login.html";
+
+}
+
+</script>
+
+<h1 class="mb-4">📊 Admin Dashboard</h1>
+
+<button
+    class="btn btn-primary"
+    onclick="loadDashboard()">
+    Load Dashboard
+</button>
+
+<hr>
+
+<div id="data"></div>
+
+<script>
+
+async function loadDashboard() {
+
+    try {
+
+        const res = await fetch(
+            "http://localhost:5000/api/users/admin-dashboard"
+        );
+
+        const data = await res.json();
+
+        document.getElementById("data").innerHTML = `
+
+            <div class="row">
+
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white mb-3">
+                        <div class="card-body">
+                            <h3>${data.total_users}</h3>
+                            <p>Total Users</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card bg-success text-white mb-3">
+                        <div class="card-body">
+                            <h3>${data.total_hospitals}</h3>
+                            <p>Total Hospitals</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card bg-warning text-dark mb-3">
+                        <div class="card-body">
+                            <h3>${data.total_requests}</h3>
+                            <p>Total Requests</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card bg-danger text-white mb-3">
+                        <div class="card-body">
+                            <h3>${data.approved_requests}</h3>
+                            <p>Approved Requests</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        `;
+
+    } catch (error) {
+
+        console.error(error);
+        alert("Error: " + error.message);
+
+    }
+
+}
+
+</script>
+```
+
+</body>
+
+</html>
